@@ -4,9 +4,9 @@ import time
 from fastapi import FastAPI
 
 # =========================
-# CREATE FASTAPI FIRST
+# FASTAPI APP
 # =========================
-fastapi_app = FastAPI()
+app = FastAPI()
 
 # =========================
 # SOCKET.IO SETUP
@@ -16,18 +16,19 @@ sio = socketio.AsyncServer(
     cors_allowed_origins="*"
 )
 
-# =========================
-# MOUNT SOCKET.IO ON FASTAPI
-# =========================
-app = socketio.ASGIApp(sio)
-fastapi_app.mount("/", app)
+# 🔥 CORRECT INTEGRATION
+socket_app = socketio.ASGIApp(sio, app)
 
 # =========================
-# HEALTH CHECK (THIS WILL WORK NOW)
+# HEALTH ROUTES (WILL WORK)
 # =========================
-@fastapi_app.get("/health")
+@app.get("/")
+async def root():
+    return {"message": "Backend running 🚀"}
+
+@app.get("/health")
 async def health():
-    return {"status": "Backend running 🚀"}
+    return {"status": "ok"}
 
 # =========================
 # STORAGE
